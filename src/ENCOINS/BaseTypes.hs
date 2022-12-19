@@ -16,7 +16,6 @@ import           Data.Aeson                (FromJSON, ToJSON)
 import           Data.Bool                 (bool)
 import           Data.Functor              ((<$>))
 import           GHC.Generics              (Generic)
-import           PlutusTx                  (ToData(..), FromData(..), UnsafeFromData(..))
 import           PlutusTx.Prelude          hiding ((<$>))
 import qualified Prelude                   as Haskell
 import           Test.QuickCheck           (Arbitrary(..))
@@ -46,18 +45,6 @@ instance ToBuiltinByteString GroupElement where
 
 instance Arbitrary GroupElement where
     arbitrary = groupExp groupGenerator <$> arbitrary
-
-instance FromData GroupElement where
-    {-# INLINABLE fromBuiltinData #-}
-    fromBuiltinData = fmap GroupElement . fromBuiltinData
-
-instance UnsafeFromData GroupElement where
-    {-# INLINABLE unsafeFromBuiltinData #-}
-    unsafeFromBuiltinData = GroupElement . unsafeFromBuiltinData
-
-instance ToData GroupElement where
-    {-# INLINABLE toBuiltinData #-}
-    toBuiltinData (GroupElement g) = toBuiltinData g
 
 {-# INLINABLE toGroupElement #-}
 toGroupElement :: BuiltinByteString -> Maybe GroupElement
@@ -111,16 +98,3 @@ instance Arbitrary MintingPolarity where
 instance ToBuiltinByteString MintingPolarity where
     {-# INLINABLE toBytes #-}
     toBytes = toBytes . (==) Mint
-
-instance FromData MintingPolarity where
-    {-# INLINABLE fromBuiltinData #-}
-    fromBuiltinData = fmap (bool Mint Burn) . fromBuiltinData
-
-instance UnsafeFromData MintingPolarity where
-    {-# INLINABLE unsafeFromBuiltinData #-}
-    unsafeFromBuiltinData = bool Mint Burn . unsafeFromBuiltinData
-
-instance ToData MintingPolarity where
-    {-# INLINABLE toBuiltinData #-}
-    toBuiltinData Mint = toBuiltinData False
-    toBuiltinData Burn = toBuiltinData True

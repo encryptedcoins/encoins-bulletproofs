@@ -16,7 +16,6 @@ import           Data.Aeson                (FromJSON, ToJSON)
 import           Data.Bifunctor            (Bifunctor(..))
 import           Data.Functor              ((<$>))
 import           GHC.Generics              (Generic)
-import           PlutusTx                  (ToData(..), FromData(..), UnsafeFromData(..))
 import           PlutusTx.Prelude          hiding ((<$>))
 import qualified Prelude                   as Haskell
 import           System.Random             (Random (..), Uniform, UniformRange)
@@ -112,15 +111,3 @@ instance FiniteField c => Random (Field c) where
     randomRs (F u, F v)  = map F . randomRs (u, v)
     random               = randomR (zero, F $ fieldPrime (mempty :: c) - 1)
     randoms              = map F . randoms
-
-instance FromData (Field c) where
-    {-# INLINABLE fromBuiltinData #-}
-    fromBuiltinData = fmap F . fromBuiltinData
-
-instance UnsafeFromData (Field c) where
-    {-# INLINABLE unsafeFromBuiltinData #-}
-    unsafeFromBuiltinData = F . unsafeFromBuiltinData
-
-instance ToData (Field c) where
-    {-# INLINABLE toBuiltinData #-}
-    toBuiltinData (F u) = toBuiltinData u
