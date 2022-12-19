@@ -1,0 +1,100 @@
+cabal-version:      3.0
+
+name:               encoins-bulletproofs
+version:            0.1.0.0
+
+maintainer:         encoins.crypto@ud.me
+
+flag frontend
+    description:
+        Builds executables for the frontend.
+    default: False
+    manual:  True
+
+-- Plutus language settings
+common lang
+    default-language:   Haskell2010
+    ghc-options:
+      -fwarn-redundant-constraints
+      -Wall
+      -Widentities
+      -Wincomplete-uni-patterns
+      -Wincomplete-record-updates
+      -Wnoncanonical-monad-instances
+      -Wredundant-constraints
+      
+      -- See Plutus Tx readme
+      -fno-ignore-interface-pragmas
+      -fno-omit-interface-pragmas
+      -fno-specialise
+      -fno-strictness
+      -fobject-code
+
+library
+    import: lang
+    exposed-modules:
+      ENCOINS.BaseTypes
+      ENCOINS.Bulletproofs
+      ENCOINS.Bulletproofs.Common
+      ENCOINS.Bulletproofs.Prove
+      ENCOINS.Bulletproofs.Types
+      ENCOINS.Bulletproofs.Utils
+      ENCOINS.Bulletproofs.Verify
+      ENCOINS.Crypto.Curve
+      ENCOINS.Crypto.Field
+    build-depends:
+      base                          >= 4.9 && < 5,
+      base16-bytestring                      -any,
+      base64                                 -any,
+      aeson                                  -any,
+      bytestring                             -any,
+      cborg                                  -any,
+      containers                             -any,
+      data-default                           -any,
+      directory                              -any,
+      extra                                  -any,
+      file-embed                             -any,
+      freer-simple                           -any,
+      flat                                   -any,
+      generic-arbitrary                      -any,
+      lens                                   -any,
+      MonadRandom                            -any,
+      mtl                                    -any,
+      openapi3                               -any,
+      optparse-applicative                   -any,
+      plutus-tx-extra                        -any,
+      prettyprinter                          -any,
+      QuickCheck                             -any,
+      random                                 -any,
+      text                                   -any
+    if flag(frontend)
+      build-depends:
+        plutus-tx-js                         -any,
+    else
+      build-depends:
+        plutus-tx                            -any,
+    hs-source-dirs: src
+
+test-suite encoins-bulletproofs-test
+  Type:                 exitcode-stdio-1.0
+  Default-Language:     Haskell2010
+  Hs-Source-Dirs:       test
+  Main-Is:              Main.hs
+  Other-Modules:        Tests.Verification
+  Build-Depends:
+    base                                     -any,
+    aeson                                    -any,
+    bytestring                               -any,
+    containers                               -any,
+    encoins-bulletproofs                     -any,
+    generic-arbitrary                        -any,
+    plutus-tx-extra                          -any,
+    QuickCheck                               -any,
+    random                                   -any,
+    text                                     -any
+  if flag(frontend)
+    build-depends:
+      plutus-tx-js                           -any,
+  else
+    build-depends:
+      plutus-tx                              -any,

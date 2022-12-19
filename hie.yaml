@@ -1,0 +1,6 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "encoins-bulletproofs:lib:encoins-bulletproofs"
+    - path: "test"
+      component: "encoins-bulletproofs:test:encoins-bulletproofs-test"
