@@ -32,7 +32,7 @@ bulletproofM :: Integer
 bulletproofM = 10
 
 data BulletproofSetup = BulletproofSetup GroupElement GroupElement [GroupElement] [GroupElement]
-    deriving (Haskell.Eq, Haskell.Show)
+    deriving (Haskell.Eq, Haskell.Show, Generic, FromJSON, ToJSON)
 
 instance Eq BulletproofSetup where
     (==) (BulletproofSetup h g hs gs) (BulletproofSetup h' g' hs' gs') =
@@ -76,7 +76,7 @@ type Secrets = [Secret]
 ---------------------------------------- Randomness -----------------------------------------
 
 data Randomness = Randomness FieldElement [FieldElement] [FieldElement] FieldElement FieldElement FieldElement
-    deriving (Haskell.Eq, Haskell.Show, Generic)
+    deriving (Haskell.Eq, Haskell.Show, Generic, FromJSON, ToJSON)
 
 instance Eq Randomness where
     (==) (Randomness alpha sL sR rho tau1 tau2) (Randomness alpha' sL' sR' rho' tau1' tau2') =
