@@ -17,11 +17,15 @@ import           GHC.Generics                       (Generic)
 import           PlutusTx.Prelude                   hiding ((<$>), mapM)
 import           Prelude                            ((^), (<$>))
 import qualified Prelude                            as Haskell
+import           System.Random                      (Random (..), Uniform)
+import           System.Random.Stateful             (Uniform(..), UniformRange(..), Uniform(..))
 import           Test.QuickCheck                    (Arbitrary(..))
 
 import           ENCOINS.BaseTypes                  (GroupElement, FieldElement, MintingPolarity)
 import           ENCOINS.Crypto.Field
 import           PlutusTx.Extra.ByteString          (ToBuiltinByteString (..))
+import           PlutusTx.Extra.Prelude             (drop)
+import ENCOINS.Crypto.Curve (BLS12381Field)
 
 ------------------------------------- BulletproofSetup --------------------------------------
 
@@ -48,7 +52,7 @@ instance Arbitrary BulletproofSetup where
 
 ------------------------------------ BulletproofParams --------------------------------------
 
--- A type that encodes public input parameters: deposit/withdrawal address public key and validity interval
+-- A type that encodes the public input parameter: deposit/withdrawal address
 type BulletproofParams = GroupElement
 
 ------------------------------------------ Secret -------------------------------------------
@@ -90,6 +94,27 @@ instance Arbitrary Randomness where
         rho   <- arbitrary
         tau1  <- arbitrary
         Randomness alpha sL sR rho tau1 <$> arbitrary
+
+instance Uniform Randomness where
+    uniformM g = do
+        let f = uniformRM (zero, F $ fieldPrime (mempty :: BLS12381Field) - 1) g
+        alpha <- f
+        sL    <- mapM (const f) [1..(bulletproofN * bulletproofM)]
+        sR    <- mapM (const f) [1..(bulletproofN * bulletproofM)]
+        rho   <- f
+        tau1  <- f
+        Randomness alpha sL sR rho tau1 <$> f
+
+instance Random Randomness where
+    randomR _  = random
+    randomRs _ = randoms
+    random g =
+        let (es, gNew) = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], g) [1..n]
+            n        = bulletproofN * bulletproofM
+        in (Randomness (head es) (take n $ drop 1 es) (take n $ drop (1+n) es) (es !! (2*n+1)) (es !! (2*n+2)) (es !! (2*n+3)), gNew)              
+    randoms g  = 
+        let (a, g') = random g
+        in a : randoms g'
 
 ------------------------------------------ Input --------------------------------------------
 

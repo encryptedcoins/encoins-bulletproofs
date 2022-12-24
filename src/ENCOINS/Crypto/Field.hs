@@ -108,6 +108,7 @@ instance FiniteField c => Uniform (Field c) where
 
 instance FiniteField c => Random (Field c) where
     randomR (F u, F v) g = first F $ randomR (u, v) g
-    randomRs (F u, F v)  = map F . randomRs (u, v)
+    randomRs interval g  = a : randomRs interval g'
+        where (a, g') = randomR interval g
     random               = randomR (zero, F $ fieldPrime (mempty :: c) - 1)
-    randoms              = map F . randoms
+    randoms              = randomRs (zero, F $ fieldPrime (mempty :: c) - 1)
