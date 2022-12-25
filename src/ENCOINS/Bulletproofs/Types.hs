@@ -21,11 +21,11 @@ import           System.Random                      (Random (..), Uniform)
 import           System.Random.Stateful             (Uniform(..), UniformRange(..), Uniform(..))
 import           Test.QuickCheck                    (Arbitrary(..))
 
-import           ENCOINS.BaseTypes                  (GroupElement, FieldElement, MintingPolarity)
+import           ENCOINS.BaseTypes                  (GroupElement, FieldElement, MintingPolarity, groupExp, groupGenerator)
+import           ENCOINS.Crypto.Curve               (BLS12381Field)
 import           ENCOINS.Crypto.Field
-import           PlutusTx.Extra.ByteString          (ToBuiltinByteString (..))
+import           PlutusTx.Extra.ByteString          (ToBuiltinByteString (..), byteStringToInteger)
 import           PlutusTx.Extra.Prelude             (drop)
-import ENCOINS.Crypto.Curve (BLS12381Field)
 
 ------------------------------------- BulletproofSetup --------------------------------------
 
@@ -54,6 +54,10 @@ instance Arbitrary BulletproofSetup where
 
 -- A type that encodes the public input parameter: deposit/withdrawal address
 type BulletproofParams = GroupElement
+
+{-# INLINABLE parseBulletproofParams #-}
+parseBulletproofParams :: BuiltinByteString -> GroupElement
+parseBulletproofParams = groupExp groupGenerator . toFieldElement . byteStringToInteger
 
 ------------------------------------------ Secret -------------------------------------------
 
