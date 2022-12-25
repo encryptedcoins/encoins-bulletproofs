@@ -11,9 +11,9 @@
 module Main where
 
 import           Data.Maybe                       (fromJust)
-import           PlutusTx.Prelude
 import           Prelude                          (IO, print, unzip)
 import qualified Prelude                          as Haskell
+import           System.Random                    (randomRIO, mkStdGen, Random (..))
 import           Test.QuickCheck                  (quickCheck)
 
 import           Tests.Verification               (prop_verification)

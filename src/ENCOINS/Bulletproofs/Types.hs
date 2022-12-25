@@ -109,7 +109,7 @@ instance Random Randomness where
     randomR _  = random
     randomRs _ = randoms
     random g =
-        let (es, gNew) = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], g) [1..n]
+        let (es, gNew) = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], g) [1..(2*n+4)]
             n        = bulletproofN * bulletproofM
         in (Randomness (head es) (take n $ drop 1 es) (take n $ drop (1+n) es) (es !! (2*n+1)) (es !! (2*n+2)) (es !! (2*n+3)), gNew)              
     randoms g  = 
