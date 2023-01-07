@@ -1,2 +1,2 @@
-# encoins-bulletproofs
-Bulletproofs algorithm used in the ENCOINS protocol
+# ENCOINS Bulletproofs
+Bulletproofs algorithm used in the ENCOINS protocol.
