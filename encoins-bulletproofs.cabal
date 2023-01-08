@@ -3,7 +3,9 @@ cabal-version:      3.0
 name:               encoins-bulletproofs
 version:            0.1.0.0
 
-maintainer:         encoins.crypto@ud.me
+author:             Vladimir Sinyakov
+maintainer:         team@encoins.io
+
 
 flag frontend
     description:
@@ -42,6 +44,8 @@ library
       ENCOINS.Bulletproofs.Verify
       ENCOINS.Crypto.Curve
       ENCOINS.Crypto.Field
+    if !flag(frontend)
+      exposed-modules: ENCOINS.Orphans
     build-depends:
       base                          >= 4.9 && < 5,
       base16-bytestring                      -any,
