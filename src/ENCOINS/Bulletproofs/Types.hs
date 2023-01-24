@@ -79,6 +79,13 @@ instance Arbitrary Secret where
         v     <- F . (`modulo` (2 ^ bulletproofN)) <$> arbitrary
         return $ Secret gamma v
 
+instance Random Secret where
+    random g = 
+        let (gamma, g') = random g
+            (v, g'')    = random g'
+        in (Secret gamma v, g'')
+    randomR _ = random
+
 type Secrets = [Secret]
 
 ---------------------------------------- Randomness -----------------------------------------
