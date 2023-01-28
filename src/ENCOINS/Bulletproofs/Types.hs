@@ -90,7 +90,7 @@ type Secrets = [Secret]
 
 instance Random Secrets where
     random g  =
-        let (secrets, gNew) = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], g) [1..5]
+        let (secrets, gNew) = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], g) [1 :: Integer .. 5]
         in (secrets, gNew)
     randomR _ = random
 
