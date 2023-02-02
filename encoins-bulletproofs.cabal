@@ -63,6 +63,7 @@ library
       flat                                   -any,
       generic-arbitrary                      -any,
       ghc-prim                               -any,
+      hex-text                               -any,
       lens                                   -any,
       memory                                 -any,
       MonadRandom                            -any,

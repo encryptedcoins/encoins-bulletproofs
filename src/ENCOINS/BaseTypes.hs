@@ -11,13 +11,17 @@
 
 module ENCOINS.BaseTypes where
 
-import           Data.Aeson                    (FromJSON, ToJSON)
+import           Control.Monad                 (fail)
+import           Data.Aeson                    (FromJSON (..), ToJSON (..))
 import           Data.Bool                     (bool)
+import           Data.ByteString               (ByteString)
+import           Data.Text                     (Text)
 import           Data.Functor                  ((<$>))
 import           GHC.Generics                  (Generic)
 import           PlutusTx.Prelude              hiding ((<$>))
 import qualified Prelude                       as Haskell
 import           Test.QuickCheck               (Arbitrary(..))
+import           Text.Hex                      (encodeHex, decodeHex)
 
 import           ENCOINS.Crypto.Edwards25519
 import           ENCOINS.Crypto.Field          (Field)
@@ -30,7 +34,16 @@ type FieldElement = Field Ed25519Field
 ------------------------------------- Group Element --------------------------------------
 
 newtype GroupElement = GroupElement CompressedPoint
-    deriving (Haskell.Eq, Haskell.Show, Generic, ToJSON, FromJSON)
+    deriving (Haskell.Eq, Haskell.Show, Generic)
+
+instance ToJSON GroupElement where
+    toJSON (GroupElement bs) = toJSON $ encodeHex $ fromBuiltin bs
+
+instance FromJSON GroupElement where
+    parseJSON v = do
+        mbs <- (decodeHex :: Text -> Maybe ByteString) <$> parseJSON v
+        let mg = fmap toBuiltin mbs >>= toGroupElement
+        maybe (fail "A valid Ed25519 hex string is expected!") return mg
 
 instance Eq GroupElement where
     (==) (GroupElement e1) (GroupElement e2) = e1 == e2
@@ -44,7 +57,7 @@ instance Arbitrary GroupElement where
 
 {-# INLINABLE toGroupElement #-}
 toGroupElement :: BuiltinByteString -> Maybe GroupElement
-toGroupElement bs = bool (Nothing) (Just $ GroupElement bs) (bs == bs')
+toGroupElement bs = bool Nothing (Just $ GroupElement bs) (bs == bs')
     where bs' = compressPoint $ decompressPoint bs
 
 {-# INLINABLE fromGroupElement #-}
