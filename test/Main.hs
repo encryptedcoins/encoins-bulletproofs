@@ -10,14 +10,15 @@
 
 module Main where
 
-import           Data.Maybe                       (fromJust)
-import           Prelude                          (IO, print, unzip)
-import qualified Prelude                          as Haskell
-import           System.Random                    (randomRIO, mkStdGen, Random (..))
+import           Prelude                                                  
 import           Test.QuickCheck                  (quickCheck)
 
+import           Tests.Group                      (prop_group_associativity, prop_group_identity, prop_group_inverse)
 import           Tests.Verification               (prop_verification)
 
 main :: IO ()
 main = do
+    quickCheck prop_group_associativity
+    quickCheck prop_group_identity
+    quickCheck prop_group_inverse
     quickCheck prop_verification

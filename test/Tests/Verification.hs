@@ -9,21 +9,19 @@
 
 module Tests.Verification where
 
-import           Control.Monad                    (mapM)
-import           Data.Maybe                       (fromJust)
-import           PlutusTx.Prelude                 hiding ((<$>), mapM)
-import           Prelude                          (IO, print, unzip, (<$>), Show (..))
-import qualified Prelude                          as Haskell
+import           PlutusTx.Prelude                 (modulo)
+import           Prelude                          
 import           Test.QuickCheck                  (quickCheck, Arbitrary (..))
 
 import           ENCOINS.BaseTypes
 import           ENCOINS.Bulletproofs
 
 data TestVerification = TestVerification BulletproofSetup BulletproofParams Secrets [MintingPolarity] Randomness
-    deriving (Haskell.Eq)
+    deriving (Eq)
 
-instance Haskell.Show TestVerification where
+instance Show TestVerification where
     show (TestVerification bs bp secrets mps r) =
+        "BulletproofSetup: " ++ show bs ++ "\n\n" ++
         "BulletproofParams: " ++ show bp ++ "\n\n" ++
         "Secrets: " ++ show secrets ++ "\n\n" ++
         "MintingPolarities: " ++ show mps ++ "\n\n" ++

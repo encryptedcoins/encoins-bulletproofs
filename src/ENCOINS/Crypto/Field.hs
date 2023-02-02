@@ -12,15 +12,15 @@
 
 module ENCOINS.Crypto.Field where
 
-import           Data.Aeson                (FromJSON, ToJSON)
-import           Data.Bifunctor            (Bifunctor(..))
-import           Data.Functor              ((<$>))
-import           GHC.Generics              (Generic)
-import           PlutusTx.Prelude          hiding ((<$>))
-import qualified Prelude                   as Haskell
-import           System.Random             (Random (..), Uniform, UniformRange)
-import           System.Random.Stateful    (Uniform(..), UniformRange (..))
-import           Test.QuickCheck           (Arbitrary(..))
+import           Data.Aeson                 (FromJSON, ToJSON)
+import           Data.Bifunctor             (Bifunctor(..))
+import           Data.Functor               ((<$>))
+import           GHC.Generics               (Generic)
+import           PlutusTx.Prelude           hiding ((<$>))
+import qualified Prelude                    as Haskell
+import           System.Random              (Random (..), Uniform, UniformRange)
+import           System.Random.Stateful     (Uniform(..), UniformRange (..))
+import           Test.QuickCheck            (Arbitrary(..))
 
 import           PlutusTx.Extra.ByteString
 
@@ -38,6 +38,16 @@ toFieldElement u = F $ modulo u (fieldPrime (mempty :: c))
 {-# INLINABLE fromFieldElement #-}
 fromFieldElement :: forall c . FiniteField c => Field c -> Integer
 fromFieldElement (F u) = modulo u (fieldPrime (mempty :: c))
+
+expField :: forall c . FiniteField c => Field c -> Integer -> Field c
+expField x n
+  | n < 0             = expField x (-n)
+  | n == 0            = one
+  | n == 1            = x
+  | n `modulo` 2 == 0 = r
+  | otherwise         = x * r
+  where
+    r = expField (x*x) (n `divide` 2)
 
 instance FiniteField c => Haskell.Eq (Field c) where
     (==) = (==)

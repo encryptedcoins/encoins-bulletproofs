@@ -43,6 +43,7 @@ library
       ENCOINS.Bulletproofs.Utils
       ENCOINS.Bulletproofs.Verify
       ENCOINS.Crypto.Curve
+      ENCOINS.Crypto.Edwards25519
       ENCOINS.Crypto.Field
     if !flag(frontend)
       exposed-modules: ENCOINS.Orphans
@@ -86,7 +87,8 @@ test-suite encoins-bulletproofs-test
   Default-Language:     Haskell2010
   Hs-Source-Dirs:       test
   Main-Is:              Main.hs
-  Other-Modules:        Tests.Verification
+  Other-Modules:        Tests.Group
+                        Tests.Verification
   Build-Depends:
     base                                     -any,
     aeson                                    -any,
@@ -94,10 +96,12 @@ test-suite encoins-bulletproofs-test
     containers                               -any,
     encoins-bulletproofs                     -any,
     generic-arbitrary                        -any,
+    hex-text                                 -any,
     plutus-tx-extra                          -any,
     QuickCheck                               -any,
     random                                   -any,
-    text                                     -any
+    text                                     -any,
+    time                                     -any
   if flag(frontend)
     build-depends:
       plutus-tx-js                           -any,

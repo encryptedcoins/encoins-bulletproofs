@@ -14,19 +14,20 @@ import           PlutusTx.Prelude
 import           ENCOINS.BaseTypes
 import           ENCOINS.Crypto.Field
 import           PlutusTx.Extra.Prelude    (drop, replicate)
+import           PlutusTx.Extra.ByteString (byteStringToInteger)
 
 ----------------------------------- Challenge ---------------------------------------
 
+ge2fe :: GroupElement -> FieldElement
+ge2fe = toFieldElement . byteStringToInteger . fromGroupElement
+
 {-# INLINABLE challenge #-}
 challenge :: [GroupElement] -> (FieldElement, FieldElement)
-challenge gs = (z', z'')
+challenge gs = (f1, f2)
     where
-        GroupElement (x, _) = foldr groupMul groupIdentity gs
-        z = toFieldElement $ fromFieldElement x :: FieldElement
-        GroupElement (x', _) = groupExp groupGenerator z
-        z' = toFieldElement $ fromFieldElement x' :: FieldElement
-        GroupElement (x'', _) = groupExp groupGenerator z'
-        z'' = toFieldElement $ fromFieldElement x'' :: FieldElement
+        gs' = map (groupExp groupGenerator . ge2fe) gs
+        f1  = ge2fe $ foldr groupMul groupIdentity gs'
+        f2  = ge2fe $ groupExp groupGenerator f1
 
 ----------------------------------- Polynomials -------------------------------------
 

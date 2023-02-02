@@ -20,11 +20,14 @@ import           PlutusTx                          (unstableMakeIsData)
 import           ENCOINS.BaseTypes
 import           ENCOINS.Bulletproofs
 import           ENCOINS.Crypto.Curve
+import           ENCOINS.Crypto.Edwards25519
 import           ENCOINS.Crypto.Field
 
 unstableMakeIsData ''Field
 unstableMakeIsData ''BLS12381
 unstableMakeIsData ''BLS12381Field
+unstableMakeIsData ''Ed25519
+unstableMakeIsData ''Ed25519Field
 unstableMakeIsData ''GroupElement
 unstableMakeIsData ''MintingPolarity
 unstableMakeIsData ''BulletproofSetup
