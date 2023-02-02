@@ -21,7 +21,7 @@ import           System.Random                      (Random (..), Uniform)
 import           System.Random.Stateful             (Uniform(..), UniformRange(..), Uniform(..))
 import           Test.QuickCheck                    (Arbitrary(..))
 
-import           ENCOINS.BaseTypes                  (GroupElement, FieldElement, MintingPolarity, groupExp, groupGenerator)
+import           ENCOINS.BaseTypes                  (GroupElement, FieldElement, MintingPolarity, groupExp, groupGenerator, FieldElementBytes)
 import           ENCOINS.Crypto.Curve               (BLS12381Field)
 import           ENCOINS.Crypto.Field
 import           PlutusTx.Extra.ByteString          (ToBuiltinByteString (..), byteStringToInteger)
@@ -67,8 +67,6 @@ data Secret = Secret
         secretV     :: FieldElement
     }
     deriving (Haskell.Eq, Haskell.Show, Generic, FromJSON, ToJSON)
-
--- unstableMakeIsData ''Secret
 
 instance Eq Secret where
     (==) (Secret g1 v1) (Secret g2 v2) = g1 == g2 && v1 == v2
@@ -149,7 +147,8 @@ type Inputs = [Input]
 
 ------------------------------------------ Proof --------------------------------------------
 
-data Proof = Proof GroupElement GroupElement GroupElement GroupElement FieldElement FieldElement [FieldElement] [FieldElement] FieldElement
+data Proof = Proof GroupElement GroupElement GroupElement GroupElement
+        FieldElementBytes FieldElementBytes [FieldElementBytes] [FieldElementBytes] FieldElementBytes
     deriving (Haskell.Eq, Haskell.Show, Generic, FromJSON, ToJSON)
 
 instance ToBuiltinByteString Proof where

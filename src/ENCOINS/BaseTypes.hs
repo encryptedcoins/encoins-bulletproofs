@@ -24,12 +24,36 @@ import           Test.QuickCheck               (Arbitrary(..))
 import           Text.Hex                      (encodeHex, decodeHex)
 
 import           ENCOINS.Crypto.Edwards25519
-import           ENCOINS.Crypto.Field          (Field)
-import           PlutusTx.Extra.ByteString     (ToBuiltinByteString(..))
+import           ENCOINS.Crypto.Field          (Field, toFieldElement, fromFieldElement)
+import           PlutusTx.Extra.ByteString     (ToBuiltinByteString(..), byteStringToInteger)
 
 ------------------------------------- Field Element --------------------------------------
 
 type FieldElement = Field Ed25519Field
+
+newtype FieldElementBytes = FieldElementBytes BuiltinByteString
+    deriving (Haskell.Eq, Haskell.Show, Generic)
+
+bytes2fe :: FieldElementBytes -> FieldElement
+bytes2fe (FieldElementBytes bs) = toFieldElement $ byteStringToInteger bs
+
+fe2bytes :: FieldElement -> FieldElementBytes
+fe2bytes = FieldElementBytes . toBytes . fromFieldElement
+
+instance ToJSON FieldElementBytes where
+    toJSON (FieldElementBytes bs) = toJSON $ encodeHex $ fromBuiltin bs
+
+instance FromJSON FieldElementBytes where
+    parseJSON v = do
+        mbs <- (decodeHex :: Text -> Maybe ByteString) <$> parseJSON v
+        let mf = fmap (FieldElementBytes . toBuiltin) mbs
+        maybe (fail "A valid hex string is expected!") return mf
+
+instance Eq FieldElementBytes where
+    (==) (FieldElementBytes bs1) (FieldElementBytes bs2) = bs1 == bs2
+
+instance ToBuiltinByteString FieldElementBytes where
+    toBytes (FieldElementBytes bs) = bs
 
 ------------------------------------- Group Element --------------------------------------
 

@@ -37,11 +37,17 @@ verify bs@(BulletproofSetup h g _ gs) bp val inputs (Proof commitA commitS commi
         psSum    = F $ sum $ map polarityToInteger ps
         delta    = ((z - z*z) * sum ys) - z * s * sum zs - z * s * z' * psSum + z' * toFieldElement val
 
-        cond1    = groupExp g tHat `groupMul` groupExp h taux ==
+        tHat' = bytes2fe tHat
+        taux' = bytes2fe taux
+        mu'   = bytes2fe mu
+        lx'   = map bytes2fe lx
+        rx'   = map bytes2fe rx
+
+        cond1    = groupExp g tHat' `groupMul` groupExp h taux' ==
             groupExp g delta
             `groupMul` foldl groupMul groupIdentity (zipWith groupExp commitVs zs)
             `groupMul` groupExp commitT1 x
             `groupMul` groupExp commitT2 x2
-        cond2    = commitP == foldl groupMul groupIdentity (groupExp h mu : zipWith groupExp gs lx ++ zipWith groupExp hs' rx)
-        cond3    = tHat == foldl (+) zero (zipWith (*) lx rx)
+        cond2    = commitP == foldl groupMul groupIdentity (groupExp h mu' : zipWith groupExp gs lx' ++ zipWith groupExp hs' rx')
+        cond3    = tHat' == foldl (+) zero (zipWith (*) lx' rx')
 
