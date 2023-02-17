@@ -50,6 +50,11 @@ instance Arbitrary BulletproofSetup where
         gs <- mapM (const arbitrary) [1..(bulletproofN * bulletproofM)]
         return $ BulletproofSetup h g hs gs
 
+instance Random BulletproofSetup where
+    random gen = (BulletproofSetup (lst !! 0) (lst !! 1) (drop 2 lst) (drop (2 + bulletproofN * bulletproofM) lst), gen)
+        where lst = map (groupExp groupGenerator) $ randoms gen
+    randomR _ = random
+
 ------------------------------------ BulletproofParams --------------------------------------
 
 -- A type that encodes the public input parameter: deposit/withdrawal address
