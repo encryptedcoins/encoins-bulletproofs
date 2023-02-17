@@ -17,7 +17,7 @@ import           GHC.Generics                       (Generic)
 import           PlutusTx.Prelude                   hiding ((<$>), mapM)
 import           Prelude                            ((^), (<$>))
 import qualified Prelude                            as Haskell
-import           System.Random                      (Random (..), Uniform)
+import           System.Random                      (Random (..), Uniform, RandomGen)
 import           System.Random.Stateful             (Uniform(..), UniformRange(..), Uniform(..))
 import           Test.QuickCheck                    (Arbitrary(..))
 
@@ -26,6 +26,11 @@ import           ENCOINS.Crypto.Curve               (BLS12381Field)
 import           ENCOINS.Crypto.Field
 import           PlutusTx.Extra.ByteString          (ToBuiltinByteString (..), byteStringToInteger)
 import           PlutusTx.Extra.Prelude             (drop)
+
+--------------------------------------- Helper function -------------------------------------
+
+randomList :: (Random a, RandomGen g) => g -> Integer -> ([a], g)
+randomList gen n = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], gen) [1 :: Integer .. n]
 
 ------------------------------------- BulletproofSetup --------------------------------------
 
@@ -51,8 +56,10 @@ instance Arbitrary BulletproofSetup where
         return $ BulletproofSetup h g hs gs
 
 instance Random BulletproofSetup where
-    random gen = (BulletproofSetup (lst !! 0) (lst !! 1) (drop 2 lst) (drop (2 + bulletproofN * bulletproofM) lst), gen)
-        where lst = map (groupExp groupGenerator) $ randoms gen
+    random gen = (BulletproofSetup (gs !! 0) (gs !! 1) (drop 2 gs) (drop (2 + bulletproofN * bulletproofM) gs), gen')
+        where 
+            (fs, gen') = randomList gen (2 * bulletproofN * bulletproofM + 2)
+            gs         = map (groupExp groupGenerator) fs
     randomR _ = random
 
 ------------------------------------ BulletproofParams --------------------------------------
@@ -93,7 +100,7 @@ type Secrets = [Secret]
 
 instance Random Secrets where
     random g  =
-        let (secrets, gNew) = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], g) [1 :: Integer .. 5]
+        let (secrets, gNew) = randomList g 5
         in (secrets, gNew)
     randomR _ = random
 
@@ -129,7 +136,7 @@ instance Random Randomness where
     randomR _  = random
     randomRs _ = randoms
     random g =
-        let (es, gNew) = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'')) ([], g) [1..(2*n+4)]
+        let (es, gNew) = randomList g (2*n+4)
             n        = bulletproofN * bulletproofM
         in (Randomness (head es) (take n $ drop 1 es) (take n $ drop (1+n) es) (es !! (2*n+1)) (es !! (2*n+2)) (es !! (2*n+3)), gNew)              
     randoms g  = 
