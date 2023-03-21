@@ -35,10 +35,10 @@ randomList gen n = foldr (\_ (lst, g') -> let (e, g'') = random g' in (e:lst, g'
 ------------------------------------- BulletproofSetup --------------------------------------
 
 bulletproofN :: Integer
-bulletproofN = 10
+bulletproofN = 20
 
 bulletproofM :: Integer
-bulletproofM = 10
+bulletproofM = 5
 
 data BulletproofSetup = BulletproofSetup GroupElement GroupElement [GroupElement] [GroupElement]
     deriving (Haskell.Eq, Haskell.Show, Generic, FromJSON, ToJSON)

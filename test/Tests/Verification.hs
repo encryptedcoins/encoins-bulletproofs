@@ -29,7 +29,7 @@ instance Show TestVerification where
 
 instance Arbitrary TestVerification where
     arbitrary = do
-        m <- (+1) . (`modulo` 10) <$> arbitrary
+        m <- (+1) . (`modulo` bulletproofM) <$> arbitrary
         bs <- arbitrary
         bp <- arbitrary
         secrets <- mapM (const arbitrary) [1..m]
