@@ -47,7 +47,7 @@ instance FromJSON FieldElementBytes where
     parseJSON v = do
         mbs <- (decodeHex :: Text -> Maybe ByteString) <$> parseJSON v
         let mf = fmap (FieldElementBytes . toBuiltin) mbs
-        maybe (fail "A valid hex string is expected!") return mf
+        maybe (fail $ "A valid hex string is expected: " ++ Haskell.show v) return mf
 
 instance Eq FieldElementBytes where
     (==) (FieldElementBytes bs1) (FieldElementBytes bs2) = bs1 == bs2
@@ -67,7 +67,7 @@ instance FromJSON GroupElement where
     parseJSON v = do
         mbs <- (decodeHex :: Text -> Maybe ByteString) <$> parseJSON v
         let mg = fmap toBuiltin mbs >>= toGroupElement
-        maybe (fail "A valid Ed25519 hex string is expected!") return mg
+        maybe (fail $ "A valid Ed25519 hex string is expected: " ++ Haskell.show v) return mg
 
 instance Eq GroupElement where
     (==) (GroupElement e1) (GroupElement e2) = e1 == e2
