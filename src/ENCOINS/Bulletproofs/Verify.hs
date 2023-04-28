@@ -25,9 +25,12 @@ verify bs@(BulletproofSetup h g _ gs) bp val inputs (Proof commitA commitS commi
         ps       = map inputPolarity inputs
         commitVs = map inputCommit inputs
 
-        CommonPart z z' ys zs lam hs' = commonPart bs bp ps (commitA, commitS)
+        gVal     = groupExp g $ toFieldElement val
+        gInputs  = [bp, gVal] ++ commitVs
 
-        (x, _)   = challenge [commitT1, commitT2]
+        CommonPart z z' ys zs lam hs' = commonPart bs gInputs ps (commitA, commitS)
+
+        (x, _)   = challenge $ [commitA, commitS, commitT1, commitT2] ++ gInputs
         x2       = x * x
 
         commitP  = foldl groupMul groupIdentity

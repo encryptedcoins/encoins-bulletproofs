@@ -13,19 +13,19 @@ import           PlutusTx.Prelude
 import           Prelude                          (Show)
 
 import           ENCOINS.BaseTypes
-import           ENCOINS.Bulletproofs.Types       (BulletproofSetup (..), BulletproofParams, bulletproofN)
+import           ENCOINS.Bulletproofs.Types       (BulletproofSetup (..), bulletproofN)
 import           ENCOINS.Bulletproofs.Utils
 import           ENCOINS.Crypto.Field
 
 data CommonPart = CommonPart FieldElement FieldElement [FieldElement] [FieldElement] [FieldElement] [GroupElement]
     deriving Show
 
-commonPart :: BulletproofSetup -> BulletproofParams -> [MintingPolarity] -> (GroupElement, GroupElement) -> CommonPart
-commonPart (BulletproofSetup _ _ hs _) bp ps (commitA, commitS) = CommonPart z z' ys zs lam hs'
+commonPart :: BulletproofSetup -> [GroupElement] -> [MintingPolarity] -> (GroupElement, GroupElement) -> CommonPart
+commonPart (BulletproofSetup _ _ hs _) gs ps (commitA, commitS) = CommonPart z z' ys zs lam hs'
     where
         m        = length ps
         twos     = powers (F 2) bulletproofN
-        (y, z)   = challenge [commitA, commitS, bp]
+        (y, z)   = challenge $ [commitA, commitS] ++ gs
         ys       = powers y (bulletproofN * m)
         (zs, z') = powersOfZ z m
         lam1     = map (* z) ys

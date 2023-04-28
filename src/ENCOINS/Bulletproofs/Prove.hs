@@ -28,6 +28,9 @@ bulletproof bs@(BulletproofSetup h g hs gs) bp secrets ps (Randomness alpha sL s
         val      = sum (zipWith (\v p -> fromFieldElement v * polarityToInteger p) vs ps)
         commitVs = zipWith groupMul (map (groupExp h) gammas) (map (groupExp g) vs)
 
+        gVal     = groupExp g $ toFieldElement val
+        gInputs  = [bp, gVal] ++ commitVs
+
         sL'      = take (bulletproofN * m) sL
         sR'      = take (bulletproofN * m) sR
 
@@ -36,7 +39,7 @@ bulletproof bs@(BulletproofSetup h g hs gs) bp secrets ps (Randomness alpha sL s
         commitA  = foldl groupMul groupIdentity (groupExp h alpha : zipWith groupExp gs aL  ++ zipWith groupExp hs aR)
         commitS  = foldl groupMul groupIdentity (groupExp h rho   : zipWith groupExp gs sL' ++ zipWith groupExp hs sR')
 
-        CommonPart z _ ys zs lam _ = commonPart bs bp ps (commitA, commitS)
+        CommonPart z _ ys zs lam _ = commonPart bs gInputs ps (commitA, commitS)
 
         l        = (map (\a -> a - z) aL, sL')
         r        = (zipWith (+) (zipWith (*) ys aR) lam, zipWith (*) ys sR')
@@ -44,7 +47,7 @@ bulletproof bs@(BulletproofSetup h g hs gs) bp secrets ps (Randomness alpha sL s
         commitT1 = groupMul (groupExp g t1) (groupExp h tau1)
         commitT2 = groupMul (groupExp g t2) (groupExp h tau2)
 
-        (x, _)   = challenge [commitT1, commitT2]
+        (x, _)   = challenge $ [commitA, commitS, commitT1, commitT2] ++ gInputs
         x2       = x * x
 
         taux     = (tau2 * x2) + (tau1 * x) + foldl (+) zero (zipWith (*) zs gammas)
