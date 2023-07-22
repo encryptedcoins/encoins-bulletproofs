@@ -17,7 +17,7 @@ import           ENCOINS.Bulletproofs.Types
 import           ENCOINS.Bulletproofs.Utils
 import           ENCOINS.Crypto.Field
 
--- NOTE: Here we assume that all lists have the correct number of elements.
+-- NOTE: Here we assume that all lists have the correct lengths. Currently, the client should take care of it.
 bulletproof :: BulletproofSetup -> BulletproofParams -> Secrets -> [MintingPolarity] -> Randomness -> (Integer, Inputs, Proof)
 bulletproof bs@(BulletproofSetup h g hs gs) bp secrets ps (Randomness alpha sL sR rho tau1 tau2) = (val, zipWith Input commitVs ps,
         Proof commitA commitS commitT1 commitT2 (fe2bytes taux) (fe2bytes mu) (map fe2bytes lx) (map fe2bytes rx) (fe2bytes tHat))

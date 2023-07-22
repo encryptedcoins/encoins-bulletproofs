@@ -19,7 +19,7 @@ import           ENCOINS.Crypto.Field
 
 {-# INLINABLE verify #-}
 verify :: BulletproofSetup -> BulletproofParams -> Integer -> Inputs -> Proof -> Bool
-verify bs@(BulletproofSetup h g _ gs) bp val inputs (Proof commitA commitS commitT1 commitT2 taux mu lx rx tHat) = cond1 && cond2 && cond3
+verify bs@(BulletproofSetup h g _ gs) bp val inputs (Proof commitA commitS commitT1 commitT2 taux mu lx rx tHat) = cond0 && cond1 && cond2 && cond3
     where
         m        = length inputs
         ps       = map inputPolarity inputs
@@ -46,6 +46,7 @@ verify bs@(BulletproofSetup h g _ gs) bp val inputs (Proof commitA commitS commi
         lx'   = map bytes2fe lx
         rx'   = map bytes2fe rx
 
+        cond0    = m <= bulletproofM && length lx' == bulletproofN*m && length rx' == bulletproofN*m
         cond1    = groupExp g tHat' `groupMul` groupExp h taux' ==
             groupExp g delta
             `groupMul` foldl groupMul groupIdentity (zipWith groupExp commitVs zs)
