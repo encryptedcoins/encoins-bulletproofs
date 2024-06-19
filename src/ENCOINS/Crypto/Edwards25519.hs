@@ -1,26 +1,27 @@
-{-# LANGUAGE AllowAmbiguousTypes        #-}
-{-# LANGUAGE BangPatterns               #-}
-{-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE DerivingStrategies         #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE AllowAmbiguousTypes   #-}
+{-# LANGUAGE BangPatterns          #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DerivingStrategies    #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 module ENCOINS.Crypto.Edwards25519 where
 
 import           Data.Bits                 (Bits (..))
 import           Data.Bool                 (bool)
-import           PlutusTx.Prelude
+import           PlutusTx.Prelude          (AdditiveGroup (..), AdditiveMonoid (..), AdditiveSemigroup (..), Bool, BuiltinByteString,
+                                            Eq (..), Group (..), Integer, Monoid (..), MultiplicativeMonoid (..),
+                                            MultiplicativeSemigroup (..), Ord (..), Semigroup (..), appendByteString, consByteString, const,
+                                            divide, emptyByteString, even, foldl, lengthOfByteString, otherwise, replicate, ($), (.), (/=))
 import           Prelude                   (seq)
 import qualified Prelude                   as Haskell
 
-import           ENCOINS.Crypto.Field      (FiniteField (..), Field (..), expField, fromFieldElement, toFieldElement)
-import           PlutusTx.Extra.ByteString (toBytes, byteStringToInteger)
-import           PlutusTx.Extra.Prelude    (replicate)
+import           ENCOINS.Crypto.Field      (Field (..), FiniteField (..), expField, fromFieldElement, toFieldElement)
+import           PlutusTx.Extra.ByteString (byteStringToInteger, toBytes)
 
 ----------------------------------------------------------------------------------
 

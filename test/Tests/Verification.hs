@@ -1,17 +1,17 @@
-{-# LANGUAGE AllowAmbiguousTypes        #-}
-{-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE AllowAmbiguousTypes   #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 module Tests.Verification where
 
-import           PlutusTx.Prelude                 (modulo)
-import           Prelude                          
-import           Test.QuickCheck                  (quickCheck, Arbitrary (..))
+import           PlutusTx.Prelude     (modulo)
+import           Prelude
+import           Test.QuickCheck      (Arbitrary (..), quickCheck)
 
 import           ENCOINS.BaseTypes
 import           ENCOINS.Bulletproofs

@@ -1,19 +1,22 @@
-{-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE DerivingStrategies         #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DerivingStrategies    #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 module ENCOINS.Bulletproofs.Utils where
 
-import           PlutusTx.Prelude
+import           PlutusTx.Prelude          (AdditiveGroup ((-)), AdditiveMonoid (zero), AdditiveSemigroup ((+)), Eq ((==)),
+                                            Foldable (foldr), Integer, MultiplicativeMonoid (one), MultiplicativeSemigroup ((*)), Ord ((>)),
+                                            divMod, drop, fst, length, map, negate, otherwise, replicate, snd, sum, take, zipWith, (!!),
+                                            ($), (++), (.))
 
-import           ENCOINS.BaseTypes
-import           ENCOINS.Crypto.Field
-import           PlutusTx.Extra.Prelude    (drop, replicate)
+import           ENCOINS.BaseTypes         (FieldElement, GroupElement, MintingPolarity (..), fromGroupElement, groupExp, groupGenerator,
+                                            groupIdentity, groupMul)
+import           ENCOINS.Crypto.Field      (Field (F), toFieldElement)
 import           PlutusTx.Extra.ByteString (byteStringToInteger)
 
 ----------------------------------- Challenge ---------------------------------------

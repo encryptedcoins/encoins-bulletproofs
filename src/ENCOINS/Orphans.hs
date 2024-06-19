@@ -1,21 +1,22 @@
-{-# LANGUAGE AllowAmbiguousTypes           #-}
-{-# LANGUAGE DataKinds                     #-}
-{-# LANGUAGE DerivingStrategies            #-}
-{-# LANGUAGE FlexibleContexts              #-}
-{-# LANGUAGE FlexibleInstances             #-}
-{-# LANGUAGE MultiParamTypeClasses         #-}
-{-# LANGUAGE NoImplicitPrelude             #-}
-{-# LANGUAGE OverloadedStrings             #-}
-{-# LANGUAGE ScopedTypeVariables           #-}
-{-# LANGUAGE TemplateHaskell               #-}
-{-# LANGUAGE TypeFamilies                  #-}
+{-# LANGUAGE AllowAmbiguousTypes   #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DerivingStrategies    #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE ViewPatterns          #-}
 
 {-# OPTIONS_GHC -Wno-orphans               #-}
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
 module ENCOINS.Orphans where
 
-import           PlutusTx                          (unstableMakeIsData)
+import           PlutusTx                    (unstableMakeIsData)
 
 import           ENCOINS.BaseTypes
 import           ENCOINS.Bulletproofs

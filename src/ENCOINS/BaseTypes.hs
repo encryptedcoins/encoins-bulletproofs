@@ -1,31 +1,33 @@
-{-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE DeriveAnyClass             #-}
-{-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE DerivingStrategies         #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DeriveAnyClass        #-}
+{-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE DerivingStrategies    #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 module ENCOINS.BaseTypes where
 
-import           Control.Monad                 (fail)
-import           Data.Aeson                    (FromJSON (..), ToJSON (..))
-import           Data.Bool                     (bool)
-import           Data.ByteString               (ByteString)
-import           Data.Text                     (Text)
-import           Data.Functor                  ((<$>))
-import           GHC.Generics                  (Generic)
-import           PlutusTx.Prelude              hiding ((<$>))
-import qualified Prelude                       as Haskell
-import           Test.QuickCheck               (Arbitrary(..))
-import           Text.Hex                      (encodeHex, decodeHex)
+import           Control.Monad               (fail)
+import           Data.Aeson                  (FromJSON (..), ToJSON (..))
+import           Data.Bool                   (bool)
+import           Data.ByteString             (ByteString)
+import           Data.Functor                ((<$>))
+import           Data.Text                   (Text)
+import           GHC.Generics                (Generic)
+import           PlutusTx.Prelude            (AdditiveMonoid (zero), Bool (False, True), BuiltinByteString, Eq (..), Functor (fmap),
+                                              Maybe (..), MultiplicativeMonoid (one), fromBuiltin, maybe, return, toBuiltin, ($), (++), (.),
+                                              (>>=))
+import qualified Prelude                     as Haskell
+import           Test.QuickCheck             (Arbitrary (..))
+import           Text.Hex                    (decodeHex, encodeHex)
 
-import           ENCOINS.Crypto.Edwards25519
-import           ENCOINS.Crypto.Field          (Field, toFieldElement, fromFieldElement)
-import           PlutusTx.Extra.ByteString     (ToBuiltinByteString(..), byteStringToInteger)
+import           ENCOINS.Crypto.Edwards25519 (CompressedPoint, Ed25519Field, addPoints, compressPoint, decompressPoint, multiplyPoint, pG)
+import           ENCOINS.Crypto.Field        (Field, fromFieldElement, toFieldElement)
+import           PlutusTx.Extra.ByteString   (ToBuiltinByteString (..), byteStringToInteger)
 
 ------------------------------------- Field Element --------------------------------------
 

@@ -24,7 +24,7 @@ common lang
       -Wincomplete-record-updates
       -Wnoncanonical-monad-instances
       -Wredundant-constraints
-      
+
       -- See Plutus Tx readme
       -fno-ignore-interface-pragmas
       -fno-omit-interface-pragmas

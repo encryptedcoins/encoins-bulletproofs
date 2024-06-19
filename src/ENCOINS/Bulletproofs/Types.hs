@@ -1,31 +1,31 @@
-{-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE DeriveAnyClass             #-}
-{-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE DeriveAnyClass        #-}
+{-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 module ENCOINS.Bulletproofs.Types where
 
-import           Control.Monad.Extra                (mapM)
-import           Data.Aeson                         (FromJSON, ToJSON)
-import           GHC.Generics                       (Generic)
-import           PlutusTx.Prelude                   hiding ((<$>), mapM)
-import           Prelude                            ((^), (<$>))
-import qualified Prelude                            as Haskell
-import           System.Random                      (Random (..), Uniform, RandomGen)
-import           System.Random.Stateful             (Uniform(..), UniformRange(..), Uniform(..))
-import           Test.QuickCheck                    (Arbitrary(..))
+import           Control.Monad.Extra       (mapM)
+import           Data.Aeson                (FromJSON, ToJSON)
+import           GHC.Generics              (Generic)
+import           PlutusTx.Prelude          (AdditiveGroup ((-)), AdditiveMonoid (zero), AdditiveSemigroup ((+)), BuiltinByteString, Eq (..),
+                                            Foldable (foldr), Integer, Monoid (mempty), MultiplicativeSemigroup ((*)), appendByteString,
+                                            const, drop, head, map, modulo, return, take, (!!), ($), (&&), (++), (.))
+import           Prelude                   ((<$>), (^))
+import qualified Prelude                   as Haskell
+import           System.Random             (Random (..), RandomGen, Uniform)
+import           System.Random.Stateful    (Uniform (..), UniformRange (..))
+import           Test.QuickCheck           (Arbitrary (..))
 
-import           ENCOINS.BaseTypes                  (GroupElement, FieldElement, MintingPolarity, groupExp, groupGenerator, FieldElementBytes)
-import           ENCOINS.Crypto.Curve               (BLS12381Field)
-import           ENCOINS.Crypto.Field
-import           PlutusTx.Extra.ByteString          (ToBuiltinByteString (..), byteStringToInteger)
-import           PlutusTx.Extra.Prelude             (drop)
+import           ENCOINS.BaseTypes         (FieldElement, FieldElementBytes, GroupElement, MintingPolarity, groupExp, groupGenerator)
+import           ENCOINS.Crypto.Curve      (BLS12381Field)
+import           ENCOINS.Crypto.Field      (Field (F), FiniteField (fieldPrime), toFieldElement)
+import           PlutusTx.Extra.ByteString (ToBuiltinByteString (..), byteStringToInteger)
 
 --------------------------------------- Helper function -------------------------------------
 
@@ -57,7 +57,7 @@ instance Arbitrary BulletproofSetup where
 
 instance Random BulletproofSetup where
     random gen = (BulletproofSetup (gs !! 0) (gs !! 1) (drop 2 gs) (drop (2 + bulletproofN * bulletproofM) gs), gen')
-        where 
+        where
             (fs, gen') = randomList gen (2 * bulletproofN * bulletproofM + 2)
             gs         = map (groupExp groupGenerator) fs
     randomR _ = random
@@ -90,7 +90,7 @@ instance Arbitrary Secret where
         return $ Secret gamma v
 
 instance Random Secret where
-    random g = 
+    random g =
         let (gamma, g') = random g
             (v, g'')    = random g'
         in (Secret gamma v, g'')
@@ -139,7 +139,7 @@ instance Random Randomness where
         let (es, gNew) = randomList g (2*n+4)
             n        = bulletproofN * bulletproofM
         in (Randomness (head es) (take n $ drop 1 es) (take n $ drop (1+n) es) (es !! (2*n+1)) (es !! (2*n+2)) (es !! (2*n+3)), gNew)              
-    randoms g  = 
+    randoms g  =
         let (a, g') = random g
         in a : randoms g'
 

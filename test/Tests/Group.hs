@@ -9,7 +9,7 @@
 
 module Tests.Group where
 
-import           Prelude                          
+import           Prelude
 import           Test.QuickCheck                  (quickCheck, Arbitrary (..))
 
 import           ENCOINS.BaseTypes                (GroupElement, groupIdentity, groupMul, groupExp)
