@@ -19,7 +19,7 @@ packages:
 source-repository-package
     type: git
     location: https://github.com/encryptedcoins/plutus-apps-extra
-    tag: 017ce93866ebbab45195718daf951fa7d7c57e4c
+    tag: debc012308edd5160048bb6db554cea7e75ba886
     subdir:
       plutus-apps-extra
       plutus-tx-extra
@@ -27,7 +27,7 @@ source-repository-package
 source-repository-package
     type: git
     location: https://github.com/IntersectMBO/cardano-node-emulator
-    -- tag: 1ad4cace0a8982c167f0c02ccf34a21931f2ce5f
+    tag: 4e448248122cece3238052b3639eb4c0c36b422d
     subdir:
       plutus-ledger
       plutus-script-utils
